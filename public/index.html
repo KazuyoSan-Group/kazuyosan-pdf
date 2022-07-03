@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KazuyoSan's PDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <style>
+        ::-webkit-file-upload-button {
+            display: none;
+        }
+
+        input[type="file"] {
+            -webkit-appearance: none;
+            text-align: center;
+            -webkit-rtl-ordering: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper flex flex-col items-center min-h-screen">
+        <!-- heading -->
+        <div class="navbar h-36 w-[60%] flex flex-col items-center justify-center border-b">
+            <h1 class="md:text-5xl text-3xl py-3 text-pine ">KAZUYOSAN'S PDF</h1>
+            <p>Your daily free PDF editor.</p>
+        </div>
+        <!-- content -->
+        <div x-data="{ openTab: 2, activeClasses: 'border-l border-t border-r rounded-t text-evergreen', inactiveClasses: 'text-pine hover:text-fog'}"
+            class="p-6 w-[60%] tabs">
+            <ul class="flex border-b">
+                <li @click="openTab = 1" :class="{ '-mb-px': openTab === 1 }" class="-mb-px mr-1">
+                    <a :class="openTab === 1 ? activeClasses : inactiveClasses"
+                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">
+                        PDF Compress
+                    </a>
+                </li>
+                <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
+                    <a :class="openTab === 2 ? activeClasses : inactiveClasses"
+                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">PDF Merge</a>
+                </li>
+                <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
+                    <a :class="openTab === 3 ? activeClasses : inactiveClasses"
+                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Lorem ipsum</a>
+                </li>
+            </ul>
+            <div class="w-full">
+                <div x-show="openTab === 1">
+                    <div class="container w-full h-56 border-b border-x flex flex-col justify-center">
+                        <div class="flex flex-col items-center">
+                            <i class="fa fa-file-pdf-o pb-2" style="font-size:36px; color:#5b7065"></i>
+                            <form action="upload.php" method="post" enctype="multipart/form-data"
+                                class="flex flex-col items-center w-full">
+                                <label for="inputTag" class="flex flex-col items-center">
+                                    <input id="inputTag" type="file" name="berkas" accept="application/pdf"
+                                        class="hidden" />
+                                    <p
+                                        class="bg-pine text-white w-44 h-8 rounded flex justify-center items-center cursor-pointer hover:bg-white hover:text-pine hover:border-pine border">
+                                        SELECT FILE</p>
+                                    <span class="mb-1" id="imageName"></span>
+                                </label>
+                                <input id="inputUpload" type="submit" name="upload" value="UPLOAD"
+                                    class="hidden bg-pine text-white w-44 h-8 rounded  justify-center items-center cursor-pointer hover:bg-white hover:text-pine hover:border-pine border" />
+                            </form>
+                            <p class="text-sm ">Easily compress your PDF with our tool</p>
+                        </div>
+                    </div>
+                </div>
+                <div x-show="openTab === 2">
+                    <div class="container w-full h-56 border-b border-x flex flex-col justify-center">
+                        <div class="flex flex-col items-center">
+                            <i class="fa fa-copy pb-2" style="font-size:36px; color:#5b7065"></i>
+                            <form action="proses.php" method="POST" enctype="multipart/form-data">
+                                <div>
+                                    <label class="flex flex-col">
+                                        <p
+                                            class="bg-pine text-white w-44 h-8 rounded flex justify-center items-center cursor-pointer hover:bg-white hover:text-pine hover:border-pine border">
+                                            SELECT FILES</p>
+                                        <input id="inputTagMultiple" type="file" name="listGambar[]"
+                                            accept="application/pdf" multiple
+                                            class="hidden w-44 h-8">
+                                        <input id="inputUploadMultiple" type="submit" name="upload" value="UPLOAD"
+                                            class="hidden bg-pine text-white w-44 h-8 rounded justify-center items-center cursor-pointer hover:bg-white hover:text-pine hover:border-pine border" />
+                                    </label>
+                                </div>
+                            </form>
+                            <p class="text-sm mt-1">Merge your PDFs with our tool</p>
+                        </div>
+                    </div>
+                </div>
+                <div x-show="openTab === 3">Tab #3</div>
+            </div>
+        </div>
+        <div class="navbar h-36 w-full bg-evergreen mt-auto flex flex-col justify-center items-center ">
+            <p class="text-sm text-white">©2022 KazuyoSan's Team</p>
+        </div>
+    </div>
+
+    <script>
+        let input = document.getElementById("inputTag");
+        let imageName = document.getElementById("imageName")
+        let inputMultiple = document.getElementById("inputTagMultiple");
+        let imageName1 = document.getElementById("imageName1")
+
+        input.addEventListener("change", () => {
+            let inputImage = document.querySelector("input[type=file]").files[0];
+            imageName.innerText = inputImage.name;
+            document.getElementById("inputUpload").style.display = "flex";
+        })
+        inputMultiple.addEventListener("change", () => {
+            
+            document.getElementById("inputTagMultiple").style.display = "flex";
+            document.getElementById("inputUploadMultiple").style.display = "flex";
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
