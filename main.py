@@ -10,7 +10,7 @@ import uuid
 app = Flask(__name__)
 id = uuid.uuid1()
 id_generator = id.hex
-storage_client = storage.Client()
+storage_client = storage.Client.from_service_account_json("service_account.json")
 bucket = storage_client.bucket("kazuyosan-pdf")
 
 # API Key
