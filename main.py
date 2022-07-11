@@ -1,5 +1,6 @@
 # Import Packages
-from flask import Flask, request, render_template
+from flask import Flask, redirect, render_template, request
+from google.cloud import storage
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger
 import json
 import os
@@ -9,6 +10,8 @@ import uuid
 app = Flask(__name__)
 id = uuid.uuid1()
 id_generator = id.hex
+storage_client = storage.Client()
+bucket = storage_client.bucket("kazuyosan-pdf")
 
 # API Key
 # api_key = os.environ["API_KEY"] # Call API Key from Environment Variable
@@ -56,7 +59,7 @@ def compress():
                 }
                 )
         
-        file.save(name) # Save the file
+        file.save(name) # Save file in local
         reader = PdfReader(name, strict=False)
         writer = PdfWriter()
         
@@ -69,13 +72,18 @@ def compress():
         with open ("result/compressed-" + id_generator + ".pdf", "wb") as f:
             writer.write(f)
         
-        os.remove(name) # Delete uploaded file
+        # Uploaded file to GCS
+        blob = bucket.blob("compressed-" + id_generator + ".pdf")
+        blob.upload_from_filename("result/compressed-" + id_generator + ".pdf")
         
-        return json.dumps(
-            {
-                "status": "Success",
-            }
-            )
+        # Make public and get link
+        blob.make_public()
+        
+        # Delete all processing file
+        os.remove(name)
+        os.remove("result/compressed-" + id_generator + ".pdf") 
+        
+        return redirect(blob.public_url)
     else:
         return json.dumps(
             {
@@ -128,7 +136,7 @@ def merge():
                     }
                     )
         
-        # Save all file
+        # Save all file in local
         for x in file:
             file[x].save(file[x].filename) 
             
@@ -142,15 +150,19 @@ def merge():
         merger.write("result/merged-" + id_generator + ".pdf")
         merger.close()
         
-        # Delete all uploaded file
+        # Uploaded file to GCS
+        blob = bucket.blob("merged-" + id_generator + ".pdf")
+        blob.upload_from_filename("result/merged-" + id_generator + ".pdf")
+        
+        # Make public and get link
+        blob.make_public()
+        
+        # Delete all processing file
         for x in file:
             os.remove(file[x].filename)
+        os.remove("result/merged-" + id_generator + ".pdf")
         
-        return json.dumps(
-            {
-                "status": "Success",
-            }
-            )
+        return redirect(blob.public_url)
     else:
         return json.dumps(
             {
