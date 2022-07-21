@@ -10,8 +10,8 @@ import uuid
 app = Flask(__name__)
 id = uuid.uuid1()
 id_generator = id.hex
-storage_client = storage.Client.from_service_account_json("service_account/service_account-cloud_storage")
-bucket = storage_client.bucket("kazuyosan-pdf")
+storage_client = storage.Client.from_service_account_json("service_account/service_account-cloud_storage") # This is the credentials
+bucket = storage_client.bucket("kazuyosan-pdf") # Bucket name
 
 # API Key
 # api_key = os.environ["API_KEY"] # Call API Key from Environment Variable
