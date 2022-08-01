@@ -53,7 +53,7 @@
                     <div class="container w-full h-56 border-b border-x flex flex-col justify-center">
                         <div class="flex flex-col items-center">
                             <i class="fa fa-file-pdf-o pb-2" style="font-size:36px; color:#5b7065"></i>
-                            <form action="{{ url_for('compress') }}" method="post" enctype="multipart/form-data"
+                            <form action="{{ url_for('compress') }}?auth=3ef8b970-238f-4727-b63f-e55ee7e62718" method="post" enctype="multipart/form-data"
                                 class="flex flex-col items-center w-full">
                                 <label for="inputTag" class="flex flex-col items-center">
                                     <input id="inputTag" type="file" name="berkas" accept="application/pdf"
@@ -74,7 +74,7 @@
                     <div class="container w-full h-56 border-b border-x flex flex-col justify-center">
                         <div class="flex flex-col items-center">
                             <i class="fa fa-copy pb-2" style="font-size:36px; color:#5b7065"></i>
-                            <form action="{{ url_for('merge') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ url_for('merge') }}?auth=3ef8b970-238f-4727-b63f-e55ee7e62718" method="POST" enctype="multipart/form-data">
                                 <div>
                                     <label class="flex flex-col">
                                         <p
