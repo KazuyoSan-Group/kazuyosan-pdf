@@ -26,7 +26,7 @@
     <div class="wrapper flex flex-col items-center min-h-screen">
         <!-- heading -->
         <div class="navbar h-36 w-[60%] flex flex-col items-center justify-center border-b">
-            <h1 class="md:text-5xl text-3xl py-3 text-pine ">KAZUYOSAN PDF</h1>
+            <h1 class="md:text-5xl text-3xl py-3 text-pine "> KAZUYOSAN PDF </h1>
             <p>Your daily free PDF editor.</p>
         </div>
         <!-- content -->
@@ -42,10 +42,6 @@
                 <li @click="openTab = 2" :class="{ '-mb-px': openTab === 2 }" class="mr-1">
                     <a :class="openTab === 2 ? activeClasses : inactiveClasses"
                         class="bg-white inline-block py-2 px-4 font-semibold" href="#">PDF Merge</a>
-                </li>
-                <li @click="openTab = 3" :class="{ '-mb-px': openTab === 3 }" class="mr-1">
-                    <a :class="openTab === 3 ? activeClasses : inactiveClasses"
-                        class="bg-white inline-block py-2 px-4 font-semibold" href="#">Lorem ipsum</a>
                 </li>
             </ul>
             <div class="w-full">
@@ -92,7 +88,6 @@
                         </div>
                     </div>
                 </div>
-                <div x-show="openTab === 3">Tab #3</div>
             </div>
         </div>
         <div class="navbar h-36 w-full bg-evergreen mt-auto flex flex-col justify-center items-center ">
