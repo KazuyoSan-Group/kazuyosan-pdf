@@ -67,7 +67,116 @@ def compress():
                 "description": "Please add the file"
             }
             )
-                    
+
+@app.route("/decrypt", methods=["POST"])
+def decrypt():
+    # Request file
+    file = request.files["berkas"]
+    password = request.form["password"]
+    
+    if file:
+        name = file.filename
+        check_extension = name.split(".")
+        
+        # Check extension
+        if check_extension[len(check_extension) - 1] != "pdf":
+            return jsonify(
+                {
+                    "status": "Error (File)",
+                    "description": "Wrong file extension. Make sure extension is .pdf"
+                }
+                )
+        
+        file.save(name) # Save file in local
+        reader = PdfReader(name, strict=False)
+        writer = PdfWriter()
+        
+        # Decrypt process
+        if reader.is_encrypted:
+            reader.decrypt(password)
+        
+        # Write page
+        for page in reader.pages:
+            writer.add_page(page)
+        
+        # Write page to file 
+        with open ("result/decrypt-" + id_generator + ".pdf", "wb") as f:
+            writer.write(f)
+        
+        # Uploaded file to GCS
+        blob = bucket.blob("decrypt-" + id_generator + ".pdf")
+        blob.upload_from_filename("result/decrypt-" + id_generator + ".pdf")
+        
+        # Make public and get link
+        blob.make_public()
+        
+        # Delete all processing file
+        os.remove(name)
+        os.remove("result/decrypt-" + id_generator + ".pdf") 
+        
+        return blob.public_url
+    else:
+        return jsonify(
+            {
+                "status": "Error (File)",
+                "description": "Please add the file"
+            }
+            )
+            
+@app.route("/encrypt", methods=["POST"])
+def encrypt():
+    # Request file
+    file = request.files["berkas"]
+    password = request.form["password"]
+    
+    if file:
+        name = file.filename
+        check_extension = name.split(".")
+        
+        # Check extension
+        if check_extension[len(check_extension) - 1] != "pdf":
+            return jsonify(
+                {
+                    "status": "Error (File)",
+                    "description": "Wrong file extension. Make sure extension is .pdf"
+                }
+                )
+        
+        file.save(name) # Save file in local
+        reader = PdfReader(name, strict=False)
+        writer = PdfWriter()
+        
+        # Write page
+        for page in reader.pages:
+            writer.add_page(page)
+        
+        # Encrypt process
+        writer.encrypt(password)
+        
+        # Write page to file 
+        with open ("result/encrypt-" + id_generator + ".pdf", "wb") as f:
+            writer.write(f)
+        
+        # Uploaded file to GCS
+        blob = bucket.blob("encrypt-" + id_generator + ".pdf")
+        blob.upload_from_filename("result/encrypt-" + id_generator + ".pdf")
+        
+        # Make public and get link
+        blob.make_public()
+        
+        # Delete all processing file
+        os.remove(name)
+        os.remove("result/encrypt-" + id_generator + ".pdf") 
+        
+        return blob.public_url
+    else:
+        return jsonify(
+            {
+                "status": "Error (File)",
+                "description": "Please add the file"
+            }
+            )
+            
 @app.route("/merge", methods=["POST"])
 def merge():
     # Request file
@@ -129,4 +238,4 @@ def merge():
         
 # APP Run
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True) 
